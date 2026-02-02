@@ -1,0 +1,40 @@
+name: Build Project
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # 允許手動點擊執行
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+
+      - name: Build
+        run: xmake -y
+
+      - name: Test
+        run: xmake test
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Locale-Emulator-Plus-Build
+          path: |
+            build/
+            bin/
+            *.exe
+            *.dll
+          # 註：path 需根據 xmake 實際產出的路徑調整，通常在 build 或是 bin 資料夾
