@@ -20,20 +20,20 @@ jobs:
         with:
           xmake-version: latest
 
-      # 編譯 x64 版本 (產生 tool.exe 與 64位元 DLL)
+      # 1. 編譯 x64 版本 (產生 tool.exe 與 64位元 DLL)
       - name: Build x64
         run: |
           xmake repo -u
           xmake f -m release -a x64 -y
           xmake -y
 
-      # 編譯 x86 版本 (僅為了產生 32位元 DLL)
+      # 2. 編譯 x86 版本 (產生 32位元 DLL)
       - name: Build x86
         run: |
           xmake f -m release -a x86 -y
           xmake -y
 
-      # 整理檔案：將 32 與 64 位元檔案集中到一個資料夾方便打包
+      # 3. 整理檔案到 dist 資料夾
       - name: Prepare Artifact
         run: |
           mkdir dist
@@ -41,6 +41,7 @@ jobs:
           copy build\windows\x64\release\locale_emulator_plus64.dll dist\
           copy build\windows\x86\release\locale_emulator_plus32.dll dist\
 
+      # 4. 上傳成品
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
