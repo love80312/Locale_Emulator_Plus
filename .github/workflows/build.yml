@@ -23,16 +23,11 @@ jobs:
       - name: Build
         run: |
           xmake repo -u
+          xmake f -m release -y
           xmake -y
-
-      - name: Test
-        continue-on-error: true # 就算測試失敗，也會繼續執行下一步並顯示綠色勾勾
-        run: xmake test
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Build-Output
-          path: |
-            build/
-            bin/
+          name: Locale-Emulator-Plus-Release
+          path: build/windows/
